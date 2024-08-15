@@ -9,8 +9,6 @@ public class UserRegistrationApp {
     }
     public void start(Scanner scanner) {
         try {
-            // Удаляем лишнее создание Scanner
-            // Scanner scanner = new Scanner(System.in); // Удалено
             System.out.println("1. Регистрация\n2. Авторизация");
 
             int choice = scanner.nextInt();

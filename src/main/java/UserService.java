@@ -1,3 +1,9 @@
+
+
+import com.google.common.hash.Hashing;
+
+import java.nio.charset.StandardCharsets;
+
 public class UserService implements UserServiceInterface {
 
     // Business Layer (Логика приложения)
@@ -27,8 +33,13 @@ public class UserService implements UserServiceInterface {
     }
 
     public void login(String username, String password) {
-        String encryptedPassword = encryptPassword(password);
-        if (userRepository.validate(username, encryptedPassword)) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            System.out.println("Неверное имя пользователя или пароль.");
+            return;
+        }
+        String encryptedPassword = user.getPassword();
+        if (encryptedPassword.equals(encryptPassword(password))) {
             System.out.println("Авторизация успешна.");
         } else {
             System.out.println("Неверное имя пользователя или пароль.");
@@ -44,6 +55,8 @@ public class UserService implements UserServiceInterface {
     }
 
     private String encryptPassword(String password) {
-        // Метод шифрования (Base64)
-        return java.util.Base64.getEncoder().encodeToString(password.getBytes());
+        String sha256hex = Hashing.sha256()
+                .hashString(password, StandardCharsets.UTF_8)
+                .toString();
+        return sha256hex;
     }}
